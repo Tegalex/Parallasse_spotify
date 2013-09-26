@@ -1,0 +1,1122 @@
+
+<!DOCTYPE HTML>
+<html lang="it" xmlns:og="http://ogp.me/ns#" xmlns:fb="http://www.facebook.com/2008/fbml" >
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="Spotify è un servizio musicale digitale che ti consente di accedere a milioni di brani.">
+    <meta name="keywords" content="Spotify, musica, online, ascolta, streaming, riproduci, digitale, album, artista, playlist">
+    <meta property="fb:app_id" content="174829003346">
+    <meta property="og:title" content="Musica per ogni momento - Spotify">
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://www.spotify.com/">
+    <meta property="og:image" content="https://d2c87l0yth4zbw.cloudfront.net/i/_global/open-graph-default.png">
+    <meta property="og:description" content="Spotify è un servizio musicale digitale che ti consente di accedere a milioni di brani.">
+    <meta name="apple-itunes-app" content="app-id=324684580">
+
+    <title>Tetti per tutti - Tettosano</title>
+	<link href="http://fonts.googleapis.com/css?family=PT+Serif:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+	<link href="http://fonts.googleapis.com/css?family=PT+Sans:regular,italic,bold,bolditalic" rel="stylesheet" type="text/css">
+    <link rel="icon" href="https://d2c87l0yth4zbw.cloudfront.net/i/_global/favicon.png">
+    <!--[if IE]><link rel="shortcut icon" href="https://d2c87l0yth4zbw.cloudfront.net/i/_global/favicon.ico"><![endif]-->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="https://d2c87l0yth4zbw.cloudfront.net/i/_global/touch-icon-144.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="https://d2c87l0yth4zbw.cloudfront.net/i/_global/touch-icon-114.png">
+    <link rel="apple-touch-icon-precomposed" sizes="72x72" href="https://d2c87l0yth4zbw.cloudfront.net/i/_global/touch-icon-72.png">
+    <link rel="apple-touch-icon-precomposed" href="https://d2c87l0yth4zbw.cloudfront.net/i/_global/touch-icon-57.png">
+
+
+    <link type="text/css" rel="stylesheet" href="https://fast.fonts.com/cssapi/6f15ec34-fe68-4dba-a329-3fae6d98b9d2.css">
+    <link rel="stylesheet" type="text/css" href="https://d2c87l0yth4zbw.cloudfront.net/css/reboot.css" media="all">
+	
+	<!-- css for auto search -->
+	<link href="https://developers.google.com/maps/documentation/javascript/examples/default.css" rel="stylesheet">
+	<!-- end css for auto search -->
+	
+	<script src="http://maps.googleapis.com/maps/api/js?v=3&sensor=false&libraries=geometry" type="text/javascript"></script>
+  
+  <script src="http://geojason.info/javascripts/modernizr-2.0.js"></script>
+  <script src="http://geojason.info/javascripts/ender.js"></script>
+  <script src="http://geojason.info/javascripts/octopress.js" type="text/javascript"></script>
+  <script src="http://geojason.info/javascripts/libs/jXHR.js" type="text/javascript"></script>
+  <link href="http://geojason.info/atom.xml" rel="alternate" title="GeoJason" type="application/atom+xml">
+<!--just after the script for autosearch in maps-->
+<script src="https://maps.googleapis.com/maps/api/js?v=3.exp&sensor=false&libraries=places"></script> 
+<!-- end script for autosearch -->
+<script src="http://geojason.info/javascripts/libs/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript">
+        var spweb = {"config":{"environment":{"staticUrl":"https:\/\/d2c87l0yth4zbw.cloudfront.net"},"facebook":{"appId":174829003346,"locale":"it_IT"},"ga":{"enable":true,"trackingId":"UA-5784146-1"},"twitter":{"enable":true}}};
+        spweb.isLinkUser = false;
+    </script>
+    <script src="https://d2c87l0yth4zbw.cloudfront.net/js/head.js"></script>
+
+	
+	<!--script for measure for area polygon from site: aletegagni.com/canvas/area_gmaps.html-->
+	
+	<script>jQuery.noConflict();</script>
+
+
+<script type="text/javascript">
+var map;
+
+// Create a meausure object to store our markers, MVCArrays, lines and polygons
+var measure = {
+    mvcLine: new google.maps.MVCArray(),
+    mvcPolygon: new google.maps.MVCArray(),
+    mvcMarkers: new google.maps.MVCArray(),
+    line: null,
+    polygon: null
+};
+
+var input =  /** @type {HTMLInputElement} */ (document.getElementById('searchTextField'));
+//var autocomplete = new google.maps.places.Autocomplete(input);
+// When the document is ready, create the map and handle clicks on it
+jQuery(document).ready(function() {
+    
+    map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 19,
+        center: new google.maps.LatLng(39.57592, -105.01476),
+        mapTypeId: google.maps.MapTypeId.SATELLITE,
+        draggableCursor: "crosshair" // Make the map cursor a crosshair so the user thinks they should click something
+    });
+    
+    google.maps.event.addListener(map, "click", function(evt) {
+        // When the map is clicked, pass the LatLng obect to the measureAdd function
+        measureAdd(evt.latLng);
+    });
+
+});
+
+function measureAdd(latLng) {
+
+    // Add a draggable marker to the map where the user clicked
+    var marker = new google.maps.Marker({
+        map: map,
+        position: latLng,
+        draggable: true,
+        raiseOnDrag: false,
+        title: "Drag me to change shape",
+        icon: new google.maps.MarkerImage("/images/demos/markers/measure-vertex.png", new google.maps.Size(9, 9), new google.maps.Point(0, 0), new google.maps.Point(5, 5))
+    });
+    
+    // Add this LatLng to our line and polygon MVCArrays
+    // Objects added to these MVCArrays automatically update the line and polygon shapes on the map
+    measure.mvcLine.push(latLng);
+    measure.mvcPolygon.push(latLng);
+    
+    // Push this marker to an MVCArray
+    // This way later we can loop through the array and remove them when measuring is done
+    measure.mvcMarkers.push(marker);
+    
+    // Get the index position of the LatLng we just pushed into the MVCArray
+    // We'll need this later to update the MVCArray if the user moves the measure vertexes
+    var latLngIndex = measure.mvcLine.getLength() - 1;
+    
+    // When the user mouses over the measure vertex markers, change shape and color to make it obvious they can be moved
+    google.maps.event.addListener(marker, "mouseover", function() {
+        marker.setIcon(new google.maps.MarkerImage("/images/demos/markers/measure-vertex-hover.png", new google.maps.Size(15, 15), new google.maps.Point(0, 0), new google.maps.Point(8, 8)));
+    });
+    
+    // Change back to the default marker when the user mouses out
+    google.maps.event.addListener(marker, "mouseout", function() {
+        marker.setIcon(new google.maps.MarkerImage("/images/demos/markers/measure-vertex.png", new google.maps.Size(9, 9), new google.maps.Point(0, 0), new google.maps.Point(5, 5)));
+    });
+    
+    // When the measure vertex markers are dragged, update the geometry of the line and polygon by resetting the
+    //     LatLng at this position
+    google.maps.event.addListener(marker, "drag", function(evt) {
+        measure.mvcLine.setAt(latLngIndex, evt.latLng);
+        measure.mvcPolygon.setAt(latLngIndex, evt.latLng);
+    });
+    
+    // When dragging has ended and there is more than one vertex, measure length, area.
+    google.maps.event.addListener(marker, "dragend", function() {
+        if (measure.mvcLine.getLength() > 1) {
+            measureCalc();
+        }
+    });
+    
+    // If there is more than one vertex on the line
+    if (measure.mvcLine.getLength() > 1) {
+        
+        // If the line hasn't been created yet
+        if (!measure.line) {
+        
+            // Create the line (google.maps.Polyline)
+            measure.line = new google.maps.Polyline({
+                map: map,
+                clickable: false,
+                strokeColor: "#FF0000",
+                strokeOpacity: 1,
+                strokeWeight: 3,
+                path:measure. mvcLine
+            });
+            
+        }
+        
+        // If there is more than two vertexes for a polygon
+        if (measure.mvcPolygon.getLength() > 2) {
+        
+            // If the polygon hasn't been created yet
+            if (!measure.polygon) {
+            
+                // Create the polygon (google.maps.Polygon)
+                measure.polygon = new google.maps.Polygon({
+                    clickable: false,
+                    map: map,
+                    fillOpacity: 0.25,
+                    strokeOpacity: 0,
+                    paths: measure.mvcPolygon
+                });
+                
+            }
+            
+        }
+        
+    }
+    
+    // If there's more than one vertex, measure length, area.
+    if (measure.mvcLine.getLength() > 1) {
+        measureCalc();
+    }
+    
+}
+
+function measureCalc() {
+    
+    // Use the Google Maps geometry library to measure the length of the line
+    var length = google.maps.geometry.spherical.computeLength(measure.line.getPath());
+    jQuery("#span-length").text(length.toFixed(1))
+    
+    // If we have a polygon (>2 vertexes inthe mvcPolygon MVCArray)
+    if (measure.mvcPolygon.getLength() > 2) {
+        // Use the Google Maps geometry library tomeasure the area of the polygon
+        var area = google.maps.geometry.spherical.computeArea(measure.polygon.getPath());
+        jQuery("#span-area").text(area.toFixed(1));
+    }
+    
+}
+
+function measureReset() {
+
+    // If we have a polygon or a line, remove them from the map and set null
+    if (measure.polygon) {
+        measure.polygon.setMap(null);
+        measure.polygon = null;
+    }
+    if (measure.line) {
+        measure.line.setMap(null);
+        measure.line = null
+    }
+    
+    // Empty the mvcLine and mvcPolygon MVCArrays
+    measure.mvcLine.clear();
+    measure.mvcPolygon.clear();
+    
+    // Loop through the markers MVCArray and remove each from the map, then empty it
+    measure.mvcMarkers.forEach(function(elem, index) {
+        elem.setMap(null);
+    });
+    measure.mvcMarkers.clear();
+    
+    jQuery("#span-length,#span-area").text(0);
+    
+}
+
+</script>
+
+<!-- end measure area of polygon from site: aletegagni.com/canvas/area_gmaps.html-->
+
+<!-- script for auto search of the places -->
+<!-- <script>
+function initialize() {
+  var mapOptions = {
+    //center: new google.maps.LatLng(-33.8688, 151.2195),
+    zoom: 13,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  var map = new google.maps.Map(document.getElementById('map-canvas'),
+    mapOptions);
+
+  var input =  /** @type {HTMLInputElement} */ (document.getElementById('searchTextField'));
+  var autocomplete = new google.maps.places.Autocomplete(input);
+
+  autocomplete.bindTo('bounds', map);
+
+  var infowindow = new google.maps.InfoWindow();
+  var marker = new google.maps.Marker({
+    map: map
+  });
+
+  google.maps.event.addListener(autocomplete, 'place_changed', function() {
+    infowindow.close();
+    marker.setVisible(false);
+    input.className = '';
+    var place = autocomplete.getPlace();
+    if (!place.geometry) {
+      // Inform the user that the place was not found and return.
+      input.className = 'notfound';
+      return;
+    }
+
+    // If the place has a geometry, then present it on a map.
+    if (place.geometry.viewport) {
+      map.fitBounds(place.geometry.viewport);
+    } else {
+      map.setCenter(place.geometry.location);
+      map.setZoom(17);  // Why 17? Because it looks good.
+    }
+    marker.setIcon( /** @type {google.maps.Icon} */ ({
+      url: place.icon,
+      size: new google.maps.Size(71, 71),
+      origin: new google.maps.Point(0, 0),
+      anchor: new google.maps.Point(17, 34),
+      scaledSize: new google.maps.Size(35, 35)
+    }));
+    marker.setPosition(place.geometry.location);
+    marker.setVisible(true);
+
+    var address = '';
+    if (place.address_components) {
+      address = [
+        (place.address_components[0] && place.address_components[0].short_name || ''),
+        (place.address_components[1] && place.address_components[1].short_name || ''),
+        (place.address_components[2] && place.address_components[2].short_name || '')
+      ].join(' ');
+    }
+
+    infowindow.setContent('<div><strong>' + place.name + '</strong><br>' + address);
+    infowindow.open(map, marker);
+  });
+
+  // Sets a listener on a radio button to change the filter type on Places
+  // Autocomplete.
+  function setupClickListener(id, types) {
+    var radioButton = document.getElementById(id);
+    google.maps.event.addDomListener(radioButton, 'click', function() {
+      autocomplete.setTypes(types);
+    });
+  }
+
+  setupClickListener('changetype-all', []);
+  setupClickListener('changetype-establishment', ['establishment']);
+  setupClickListener('changetype-geocode', ['geocode']);
+}
+
+google.maps.event.addDomListener(window, 'load', initialize);
+
+    </script> -->
+	<!--end script for auto search of the places -->
+</head>
+
+<body class="m-it l-it page-homepage  is-loggedout reboot">
+  <div id="fb-root"></div>
+  <div class="wrap">
+<header id="js-header-main" class="header-main">
+  <div class="container">
+
+<a class="logo" href="/it/">
+  <img src="https://d2c87l0yth4zbw.cloudfront.net/i/_global/logo.png" alt="Spotify">
+</a>
+
+    <div id="js-nav-wrap" class="nav-wrap is-collapsed">
+      <div id="js-toggle-nav" class="toggle-nav">
+        <div id="js-icon-toggle-nav" class="icon-toggle-nav">
+          <i class="icon-toggle"></i>
+        </div>
+      </div>
+      <nav id="js-nav-header" class="nav-header">
+        <ul id="js-nav-list" class="nav-list">
+          <li class="nav-item"><a id="nav-link-features" class=" nav-link features js-ga-event" data-ga-event-category="moreinfo" data-ga-event-action="features" data-ga-event-label="navigation_top"  href="/it/#features">Funzioni</a></li><li class="nav-item"><a id="nav-link-premium" class=" nav-link premium js-ga-event" data-ga-event-category="upgrade" data-ga-event-action="pricing" data-ga-event-label="navigation_top"  href="/it/#premium">Premium</a></li><li class="nav-item"><a id="nav-link-help" class=" nav-link help js-ga-event" data-ga-event-category="moreinfo" data-ga-event-action="help" data-ga-event-label="navigation_top"  href="http://support.spotify.com">Assistenza</a></li><li class="nav-item"><div  id="js-account" class="account is-loggedout"><a href="/it/account/overview/" id="js-avatar-link" data-signup-start-section="login" class="avatar-link js-open-signup is-loggedout"><img id="js-avatar" class="avatar" src="https://d2c87l0yth4zbw.cloudfront.net/i/_global/default-avatar.png" alt="Log in to view your account"></a><a id="nav-link-login" class=" nav-link log_in js-open-signup" data-signup-start-section="login" href="/it/account/overview/">Accedi</a></div></li><li class="nav-item"><a id="nav-button-get-spotify" class="js-open-signup nav-link get_spotify js-ga-event js-button-download button button-highlight get-spotify" data-ga-event-category="acquisition" data-ga-event-action="download_spotify" data-ga-event-label="navigation_top" data-signup-start-section="signup-select"  href="/it/download/">Scarica Spotify</a></li><li class="nav-item"><a id="nav-button-download-spotify" class="js-open-signup nav-link download_spotify js-ga-event js-button-download button button-highlight use-web-player-flow" data-ga-event-category="acquisition" data-ga-event-action="download_spotify" data-ga-event-label="navigation_top" data-signup-start-section="signup-select"  href="/it/download/">Scarica Spotify</a></li><li class="nav-item"><a id="nav-button-use-web-player" class="js-open-signup nav-link use_web_player js-ga-event button button-highlight use-web-player-flow js-use-web-player" data-ga-event-category="acquisition" data-ga-event-action="use_web_player" data-ga-event-label="navigation_top" data-signup-start-section="signup-select"  href="/it/redirect/webplayer/new-user/">Use Web Player</a></li>        </ul>
+      </nav>
+    </div>
+  </div>
+</header>
+
+<div class="dummy-firstload"></div>
+<div class="content-main" style="visibility: hidden;">
+
+<section id="section-soundtrack" class="soundtrack section-auto-size intro-dusk" data-auto-size="1">
+  <div class="container">
+    <div class="box">
+      <div class="single-column">
+
+<a class="logo" href="/it/">
+  <img src="https://d2c87l0yth4zbw.cloudfront.net/i/_global/logo.png" alt="Spotify">
+</a>
+
+          <h1>Effettua un preventivo gratis</h1>
+          <p class="lead">
+            Compila le opzioni e avrai il tuo preventivo          </p>
+          <a href="/it/freetrial/"
+          class="button button-highlight js-ga-event"
+          data-ga-event-category="upgrade"
+          data-ga-event-action="get_trial"
+          data-ga-event-label="mega">
+            Prova           </a>
+          <a href="#features"
+          class="section-arrow section-arrow-big js-ga-event"
+          data-ga-event-category="moreinfo"
+          data-ga-event-action="arrow1_home"
+          data-ga-event-label="mega"
+          data-target="section-listen-everywhere"></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="artwork-strip"></div>
+
+<div class="scroller-main"
+     data-image="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-fence.jpg"
+     data-image-mobile="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-fence-small.jpg"
+     data-width="1600"
+     data-height="837"
+     data-extra-height="128"
+     data-extra-height-mobile="64"></div> <!-- 128px is the bottom area covered by the toplist album artwork strip; number is somewhat arbitrary. -->
+
+<a id="features" class="in-page-anchor" name="features"></a>
+<section id="section-listen-everywhere" class="section-auto-size has-arrow-button-below listen-everywhere"
+         data-auto-size="0.6">
+  <div class="container">
+
+
+    <div class="box">
+      <div class="single-column">
+	  
+        <h2>Cerca il Tetto</h2>
+		<input id="searchTextField" type="text" size="50">
+<div class="google-maps" id="map" style="height: 400px; position: relative; border: 1px solid #CCC;"></div>
+<p>Lunghezza (Linea rossa): <span id="span-length">0</span> mt - Area (area grigia): <span id="span-area">0</span> mt² - <a href="javascript:measureReset();">Resetta misure</a></p>
+
+<!--<script src="http://geojason.info/javascripts/libs/jquery-1.6.4.min.js"></script>-->
+        <!-- <p class="lead">
+            Spotify funziona su computer, cellulare, tablet e impianto di home entertainment.          <span
+            class="is-hidden-palm"><br/>Puoi anche scaricare la tua musica preferita, per ascoltarla offline.</span>
+        </p> -->
+
+        <!-- <p>
+          <img src="https://d2c87l0yth4zbw.cloudfront.net/i/home/listen-everywhere-device-icons.png" alt=""/>
+        </p> -->
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-arrow-holder">
+  <a href="#search-discover"
+  class="section-arrow js-ga-event"
+  data-ga-event-category="moreinfo"
+  data-ga-event-action="arrow2_listen"
+  data-ga-event-label="mega"
+  data-target="section-search-discover"></a>
+</div>
+
+<div class="scroller-main"
+     data-image="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-ipad.jpg"
+     data-image-mobile="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-ipad-small.jpg"
+     data-width="1600"
+     data-height="1061"></div>
+
+<section id="section-search-discover" class="section-auto-size has-arrow-button-below search-discover" data-auto-size="0.6">
+  <div class="container">
+    <a name="search-discover"></a>
+
+    <div class="box">
+      <div class="box-inner">
+          <div class="two-columns narrow-when-stacked">
+            <div class="img-main-holder">
+              <img src="https://d2c87l0yth4zbw.cloudfront.net/i/home/img-blank-70.gif" class="img-main img-search-discover"/>
+            </div>
+          </div>
+          <div class="two-columns">
+            <h1>Cerca e trova</h1>
+
+            <p class="lead">
+              Scegli la musica che più ti piace oppure lasciati sorprendere da Spotify.              <span class="is-hidden-palm">Se sai cosa vuoi, cercalo e seleziona Play. Oppure, cerca nuova musica sfogliando le librerie di amici, artisti e celebrità.</span>
+              <span class="is-visible-palm">Ti basta cercare e selezionare Play. Oppure, sfoglia le librerie di amici, artisti e celebrità.</span>
+            </p>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-arrow-holder">
+  <a href="#playlists"
+  class="section-arrow js-ga-event"
+  data-ga-event-category="moreinfo"
+  data-ga-event-action="arrow3_search"
+  data-ga-event-label="mega"
+  data-target="section-playlists"></a>
+</div>
+
+
+<div class="scroller-main"
+     data-image="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-bike.jpg"
+     data-image-mobile="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-bike-small.jpg"
+     data-width="1600"
+     data-height="936"></div>
+
+<section id="section-playlists" class="section-auto-size has-arrow-button-below playlists" data-auto-size="0.6">
+  <div class="container">
+    <a name="playlists"></a>
+
+    <div class="box">
+      <div class="box-inner">
+          <div class="two-columns">
+            <h1>Crea la tua libreria</h1>
+
+            <p class="lead">
+              Crea le playlist da aggiungere alla tua libreria personale oppure trova una playlist che ti piace e aggiungila alla tua libreria.                <span class="is-hidden-palm">Molto presto, avrai la musica giusta per ogni umore e occasione.</span>
+            </p>
+          </div>
+          <div class="two-columns">
+            <ul class="playlist">
+              <li id="playlistItem1">
+                <a class="playlist-link" href="http://open.spotify.com/user/spotify/playlist/0p36VWCE69lwAoIG6i80Dv">
+                  <i class="icon icon-75 icon-pl-1"></i>
+                </a>
+                  <div class="playlist-item">
+                    <a href="http://open.spotify.com/user/spotify/playlist/0p36VWCE69lwAoIG6i80Dv">
+                      <span class="playlist-name">Suona il blues del pendolare</span>
+                    </a>
+                  </div>
+
+              </li>
+              <li id="playlistItem2">
+                <a class="playlist-link" href="http://open.spotify.com/user/spotify/playlist/5srGoJjNy2FziC51u8HrP1">
+                  <i class="icon icon-75 icon-pl-2"></i>
+                </a>
+                <div class="playlist-item">
+                  <a href="http://open.spotify.com/user/spotify/playlist/5srGoJjNy2FziC51u8HrP1">
+                    <span class="playlist-name">Tempo di far festa!</span>
+                  </a>
+                </div>
+              </li>
+              <li id="playlistItem3">
+                <a class="playlist-link" href="http://open.spotify.com/user/spotify/playlist/25p0k2XJ2SVFFKJN6TcUvG">
+                  <i class="icon icon-75 icon-pl-3"></i>
+                </a>
+                <div class="playlist-item">
+                  <a href="http://open.spotify.com/user/spotify/playlist/25p0k2XJ2SVFFKJN6TcUvG">
+                    <span class="playlist-name">Allenamento al massimo</span>
+                  </a>
+                </div>
+              </li>
+            </ul>
+          </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-arrow-holder">
+  <a href="#follow-share"
+  class="section-arrow js-ga-event"
+  data-ga-event-category="moreinfo"
+  data-ga-event-action="arrow4_build"
+  data-ga-event-label="mega"
+  data-target="section-follow-share"></a>
+</div>
+
+<div class="scroller-main"
+     data-image="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-guitar.jpg"
+     data-image-mobile="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-guitar-small.jpg"
+     data-width="1600"
+     data-height="1067"></div>
+
+<section id="section-follow-share" class="section-auto-size has-arrow-button-below follow-share" data-auto-size="0.6">
+  <div class="container">
+    <a name="follow-share"></a>
+
+    <div class="box">
+      <div class="box-inner">
+        <div class="two-columns narrow-when-stacked">
+          <div class="img-main-holder">
+            <img src="https://d2c87l0yth4zbw.cloudfront.net/i/home/img-blank-70.gif" class="img-main img-follow-share"/>
+            <p><a href="http://open.spotify.com/user/brunomars/playlist/5ctjju5tPKLub2s7uvblNg">Soul and Early Rock &amp; Roll</a> <br/>Bruno Mars</p>
+          </div>
+        </div>
+        <div class="two-columns">
+          <h1>Segui e condividi</h1>
+
+          <p class="lead">
+            <span class="is-hidden-palm">La musica aggrega. Per questo Spotify è così "social". Condividi la musica su Spotify, Facebook, Twitter, sul tuo blog e via e-mail. Puoi anche seguire altre persone interessanti. Se scoprono della musica eccezionale, tu non sarai da meno!</span>
+            <span class="is-visible-palm">Spotify è "social". Condividi la musica su Spotify, Facebook, Twitter, sul tuo blog e via e-mail. Puoi anche seguire altre persone interessanti: se scoprono della musica eccezionale, tu non sarai da meno!</span>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<div class="section-arrow-holder">
+  <a href="#radio"
+  class="section-arrow js-ga-event"
+  data-ga-event-category="moreinfo"
+  data-ga-event-action="arrow5_follow"
+  data-ga-event-label="mega"
+  data-target="section-radio"></a>
+</div>
+
+<div class="scroller-main"
+     data-image="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-glasses.jpg"
+     data-image-mobile="https://d2c87l0yth4zbw.cloudfront.net/i/home/intro-glasses-small.jpg"
+     data-width="1600"
+     data-height="866"></div>
+
+<section id="section-radio" class="section-auto-size has-arrow-button-below radio" data-auto-size="0.6">
+  <div class="container">
+    <a name="radio"></a>
+
+    <div class="box">
+      <div class="box-inner">
+        <div class="two-columns">
+          <h1>Radio</h1>
+
+          <p class="lead">
+            <span class="is-hidden-palm">Rilassati e goditi Spotify Radio.</span>
+            <span class="is-visible-palm">In cerca di qualcosa di nuovo?</span>
+            Inizia con un brano che adori e lascia che Spotify ti proponga altri brani eccezionali, uno dietro l'altro.            <span class="is-hidden-palm">Perfetto se non sai cosa ascoltare o se sei in cerca di qualcosa di nuovo.</span>
+          </p>
+        </div>
+        <div class="two-columns narrow-when-stacked">
+          <div class="img-main-holder">
+            <img src="https://d2c87l0yth4zbw.cloudfront.net/i/home/img-blank-70.gif" class="img-main img-radio"/>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<a href="#premium"
+  class="section-arrow js-ga-event"
+  data-ga-event-category="moreinfo"
+  data-ga-event-action="arrow6_radio"
+  data-ga-event-label="mega"
+  data-target="section-premium"></a>
+
+<a id="premium" class="in-page-anchor" name="premium"></a>
+<section id="section-premium" class="feature premium">
+  <div class="premium-container">
+
+    <div class="premium-options-holder">
+      <div class="premium-option free">
+        <h1>
+          Free        </h1>
+        <p class="premium-tag">
+          Musica istantanea e gratuita.        </p>
+        <p class="premium-price">Completamente gratis</p>
+
+        <aside>
+          <img src="https://d2c87l0yth4zbw.cloudfront.net/i/_global/laptop-ad.png" width="67" height="42" class="device-img">
+        </aside>
+
+        <ul class="premium-details-list">
+	<li>Ascolta sul tuo desktop o laptop</li>
+	<li>Milioni di brani, ti basta selezionare Play</li>
+	<li>Possibile grazie alla pubblicità</li>
+</ul>
+        <a id="js-button-get-free" href="/it/download/"
+        class="button js-button-download js-ga-event js-open-signup"
+        data-ga-event-category="acquisition"
+        data-ga-event-action="download_spotify"
+        data-ga-event-label="mega_pricing"
+        data-signup-start-section="signup-select">
+          Scarica gratuitamente        </a>
+      </div>
+
+      <div class="premium-option unlimited">
+        <h1>
+          Unlimited        </h1>
+        <p class="premium-tag">
+          Musica senza interruzioni.        </p>
+        <p class="premium-price">
+          €4,99 al mese.        </p>
+
+        <aside>
+          <img src="https://d2c87l0yth4zbw.cloudfront.net/i/_global/laptop.png" width="67" height="42" class="device-img">
+        </aside>
+
+        <ul class="premium-details-list">
+	<li>Ascolta sul tuo desktop o laptop</li>
+	<li>Milioni di brani, ti basta selezionare Play</li>
+	<li>Nessuna pubblicità e nessun vincolo</li>
+</ul>
+        <a id="js-button-get-unlimited" href="/it/get-spotify/go/unlimited/"
+        class="button js-ga-event js-open-signup"
+        data-ga-event-category="upgrade"
+        data-ga-event-action="get_unlimited"
+        data-ga-event-label="mega_pricing"
+        data-signup-start-section="login">
+          Scarica la versione Unlimited        </a>
+      </div>
+
+      <div class="premium-option premium">
+        <div class="premium-banner-container">
+          <a href="/it/freetrial/"
+            class="premium-banner js-ga-event js-open-signup"
+            data-ga-event-category="upgrade"
+            data-ga-event-action="get_trial"
+            data-ga-event-label="mega_pricing"
+            data-signup-start-section="login">
+            <div class="banner-text">30 giorni di prova gratis</div>
+          </a>
+        </div>
+        <h1>
+          Premium        </h1>
+        <p class="premium-tag">
+          La tua musica sempre con te.        </p>
+        <p class="premium-price">
+          €9,99 al mese.        </p>
+
+        <aside>
+          <img src="https://d2c87l0yth4zbw.cloudfront.net/i/_global/all-devices.png" width="227" height="49" class="device-img">
+        </aside>
+
+        <ul class="premium-details-list">
+	<li>Ascolta su tutti i tuoi dispositivi</li>
+	<li>Scarica la musica e ascoltala offline</li>
+	<li>Nessuna pubblicità e nessun vincolo</li>
+</ul>
+        <a id="js-button-try-premium" href="/it/freetrial/"
+        class="button button-highlight js-ga-event js-open-signup"
+        data-ga-event-category="upgrade"
+        data-ga-event-action="get_trial"
+        data-ga-event-label="mega_pricing"
+        data-signup-start-section="login">
+          Prova la versione Premium        </a>
+      </div>
+    </div>
+    <div class="premium-secondary">
+        <div class="is-visible-desk secondary-message">
+          <i class="icon-sm icon-gift"></i><p class="secondary-desc"><strong class="secondary-action">Regala la musica!</strong> Spotify e-cards sono disponibili <a href="/it/get-spotify/e-card/" class="js-ga-event" data-ga-event-category="prepaid" data-ga-event-action="get_card" data-ga-event-label="mega_pricing">qui</a>.</p>        </div>
+        <div class="is-hidden-desk secondary-message">
+          <i class="icon-sm icon-logo-disc"></i><p class="secondary-desc"><strong class="secondary-action">Scopri più musica</strong> Scarica Spotify sul tuo computer da spotify.com</p>        </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script src="https://d2c87l0yth4zbw.cloudfront.net/js/image-strip-artwork3.js" id="spweb" data-static-url="https://d2c87l0yth4zbw.cloudfront.net"></script>
+
+  </div><!-- /wrap -->
+<footer id= "footer-main" class="footer-main group">
+  <div class="container">
+    <nav class="nav-footer">
+      <ul>
+<li class="nav-item about_us"><a class="nav-link js-ga-event" data-ga-event-category="moreinfo" data-ga-event-action="about" data-ga-event-label="navigation_bottom" href="/it/about-us/contact/" >Chi siamo</a></li><li class="nav-item jobs"><a class="nav-link js-ga-event" data-ga-event-category="moreinfo" data-ga-event-action="jobs" data-ga-event-label="navigation_bottom" href="/it/jobs/" >Opportunità di lavoro</a></li><li class="nav-item press"><a class="nav-link js-ga-event" data-ga-event-category="moreinfo" data-ga-event-action="press" data-ga-event-label="navigation_bottom" href="http://press.spotify.com/it/" >Stampa</a></li><li class="nav-item news"><a class="nav-link js-ga-event" data-ga-event-category="moreinfo" data-ga-event-action="news" data-ga-event-label="navigation_bottom" href="/it/blog/" >Notizie</a></li>      </ul>
+      <ul class="small">
+        <li class="nav-item">
+          <a href="/it/legal/">Informazioni legali</a>
+        </li>
+        <li class="nav-item">
+          <a href="/it/legal/privacy-policy/#cookies">Cookies</a>
+        </li>
+        <li class="nav-item">
+          <a id="_bapw-link" href="https://info.evidon.com/pub_info/1120?v=1" target="_blank"><img src="https://cdn.betrad.com/pub/icon1.png" id="_bapw-icon" style="border:0 !important;display:inline !important;vertical-align:middle !important;  margin-bottom: 2px !important;"/> <span>AdChoices</span></a><script>/*<![CDATA[*/(function(){var c=1120,g=1816,b=false,i=document,f=i.getElementById("_bapw-link"),h=(i.location.protocol=="https:"),a=(h?"https":"http")+"://";function e(j){var d=new Image();d.src=a+"l.betrad.com/pub/p.gif?pid="+c+"&ocid="+g+"&i"+j+"=1&r="+Math.random()}f.onclick=function(){e("c");return true};e("i")}());/*]]>*/</script>
+        </li>
+        <li class="nav-item">
+          <a href="https://plus.google.com/101708746734094966121" rel="publisher">Trovaci su Google+</a>
+        </li>
+      </ul>
+    </nav>
+    <div class="box">
+
+<div class="market-picker" id="js-market-picker">
+  <a href="#" class="market-link is-selected" title="Clicca per modificare">
+    <span class="country-name">Italia</span>
+    <span class="icon icon-flag-sm icon-flag-sm-it"></span>
+  </a>
+
+  <ul id="js-market-picker-list" class="market-picker-list popover popover-up">
+    <li>
+      <a href="//www.spotify.com/no/" rel="no" class="market-picker-link js-market-picker-link">
+        <span class="country-name">Norvegia</span>
+        <span class="icon-flag-top-countries icon-flag-top-countries-no"></span>
+      </a>
+    </li>
+    <li>
+      <a href="//www.spotify.com/nl/" rel="nl" class="market-picker-link js-market-picker-link">
+        <span class="country-name">Paesi Bassi</span>
+        <span class="icon-flag-top-countries icon-flag-top-countries-nl"></span>
+      </a>
+    </li>
+    <li>
+      <a href="//www.spotify.com/uk/" rel="uk" class="market-picker-link js-market-picker-link">
+        <span class="country-name">Regno Unito</span>
+        <span class="icon-flag-top-countries icon-flag-top-countries-uk"></span>
+      </a>
+    </li>
+    <li>
+      <a href="//www.spotify.com/se/" rel="se" class="market-picker-link js-market-picker-link">
+        <span class="country-name">Svezia</span>
+        <span class="icon-flag-top-countries icon-flag-top-countries-se"></span>
+      </a>
+    </li>
+    <li>
+      <a href="//www.spotify.com/us/" rel="us" class="market-picker-link js-market-picker-link">
+        <span class="country-name">USA</span>
+        <span class="icon-flag-top-countries icon-flag-top-countries-us"></span>
+      </a>
+    </li>
+    <li>
+      <a class="market-picker-all" href="/it/select-your-country/">
+        Visualizza tutti i Paesi      </a>
+    </li>
+  </ul>
+</div>
+
+      <small class="copyright">
+        &copy; 2007-2013 Spotify Ltd
+      </small>
+    </div>
+  </div>
+</footer>
+<div class="is-hidden">
+<div class="sign-up module">
+  <a class="spotify-logo" href="/it/"></a>
+
+<section class="signup-select">
+  <div class="content">
+    <a href="#" class="button button-facebook js-signup-fb" id="select-button-signup-fb">
+      <div class="icon-wrap">
+        <i class="icon icon-fb"></i>
+      </div>
+      Iscriviti con Facebook    </a>
+
+    <strong class="line-thru">o</strong>
+
+    <a href="/it/signup/" class="primary js-link" data-section="register" id="select-link-signup-email">
+      Iscriviti con il tuo indirizzo e-mail    </a>
+    <p class="primary">
+      Hai già un account?      <a id="select-link-login" class="js-link" data-section="login" href="/it/login/">Esegui il log in</a>
+    </p>
+  </div>
+</section>
+
+<section class="register">
+  <div class="content">
+
+    <h2 class="title">Iscriviti con il tuo indirizzo e-mail</h2>
+
+    <form
+      id="js-register-with-email"
+      method="post"
+      action="/it/xhr/json/sign-up-for-spotify.php">
+
+      <div id="js-server-error" class="alert alert-info is-hidden">
+        <p></p>
+      </div>
+
+      <input name="form_token" type="hidden" value="ec54bdc0356eed4d36a7cf88701ac2ce">
+
+      <input id="creation_flow" name="creation_flow" type="hidden" value="">
+
+      <input
+      type="hidden"
+      id="register-forward-url"
+      name="forward_url"
+      value="/it/download/">
+
+      <input
+      type="hidden"
+      id="register-pre-tick-eula"
+      name="signup_pre_tick_eula"
+      value="false">
+
+      <fieldset>
+        <ul>
+          <li>
+            <label class="is-visually-hidden" for="register-username">Nome utente:</label>
+            <input
+            type="text"
+            id="register-username"
+            name="username"
+            placeholder="Nome utente"
+            required
+            data-msg-required="Scegli uno username."
+            data-rule-minlength="4"
+            data-msg-minlength="Il tuo username è troppo corto"
+            data-rule-remote="/it/xhr/json/isUsernameAvailable.php"
+            data-msg-remote="Spiacenti, questo username non è disponibile."
+            maxlength="50"
+            autocapitalize="off"
+            autocomplete="off"
+            autocorrect="off">
+          </li>
+
+          <li>
+            <label class="is-visually-hidden" for="register-password">Password:</label>
+            <input
+            type="password"
+            id="register-password"
+            name="password"
+            placeholder="Password"
+            required
+            data-msg-required="Scegli una password."
+            data-rule-minlength="4"
+            data-msg-minlength="La password è troppo breve."
+            maxlength="100"
+            autocomplete="off">
+          </li>
+
+          <li>
+            <label class="is-visually-hidden" for="register-email">E-mail:</label>
+            <input
+            type="email"
+            id="register-email"
+            name="email"
+            placeholder="E-mail"
+            required
+            data-msg-required="Inserisci il tuo indirizzo e-mail."
+            data-msg-email="L'indirizzo e-mail fornito non è valido"
+            data-rule-remote="/it/xhr/json/isEmailAvailable.php"
+            data-msg-remote="Spiacenti! Questa e-mail è già in uso."
+            maxlength="100">
+          </li>
+
+          <li>
+            <label class="is-visually-hidden" for="register-confirm-email">Conferma l'e-mail:</label>
+            <input
+            type="email"
+            id="register-confirm-email"
+            name="confirm_email"
+            placeholder="Conferma l'e-mail"
+            required
+            data-msg-required="Conferma il tuo indirizzo e-mail."
+            data-msg-email="L'indirizzo e-mail fornito non è valido"
+            data-rule-equalTo="#register-email"
+            data-msg-equalTo="L'indirizzo e-mail non corrisponde"
+            maxlength="100">
+          </li>
+
+          <li id="li-dob" class="controls-dob" data-error-age="Spiacenti! Per registrare un account devi avere almeno 13 anni.">
+            <label for="register-age">Data di nascita:</label>
+            <div id="register-dob" class="register-dob">
+<div class="controls controls-day">
+  <input
+  type="number"
+  id="register-dob-day"
+  class="dob"
+  name="dob_day"
+  placeholder="giorno"
+  pattern="[0-9]*"
+  maxlength="2"
+  min="1"
+  max="31"
+  required
+  data-msg-required="When were you born?"
+  data-msg-min="Inserisci un giorno valido del mese."
+  data-msg-max="Inserisci un giorno valido del mese.">
+</div>
+<div class="controls controls-month">
+  <select
+  id="register-dob-month"
+  class="dob"
+  name="dob_month"
+  required
+  data-msg-required="When were you born?">
+    <option value="" selected disabled>mese</option>
+    <option value="01">Gennaio</option>
+    <option value="02">Febbraio</option>
+    <option value="03">Marzo</option>
+    <option value="04">Aprile</option>
+    <option value="05">Maggio</option>
+    <option value="06">Giugno</option>
+    <option value="07">Luglio</option>
+    <option value="08">Agosto</option>
+    <option value="09">Settembre</option>
+    <option value="10">Ottobre</option>
+    <option value="11">Novembre</option>
+    <option value="12">Dicembre</option>
+  </select>
+</div>
+<div class="controls controls-year">
+  <input
+  type="number"
+  id="register-dob-year"
+  class="dob"
+  name="dob_year"
+  placeholder="anno"
+  pattern="[0-9]*"
+  maxlength="4"
+  min="1900"
+  max="2000"
+  required
+  data-msg-required="When were you born?"
+  data-msg-min="Please enter a valid year."
+  data-msg-max="Per utilizzare Spotify devi avere almeno 13 anni">
+</div>
+            </div>
+          </li>
+
+          <li id="li-gender">
+            <label class="is-visually-hidden">Sesso:</label>
+              <label for="register-male" class="radio control-inline">
+                <input
+                type="radio"
+                id="register-male"
+                class="gender"
+                name="gender"
+                value="male"
+                required
+                data-msg-required="Indica se sei marchio o femmina.">
+                Uomo              </label>
+
+              <label for="register-female" class="radio control-inline">
+                <input
+                type="radio"
+                id="register-female"
+                class="gender"
+                name="gender"
+                value="female"
+                required
+                data-msg-required="Indica se sei marchio o femmina.">
+                Donna              </label>
+          </li>
+
+          <li id="li-optin" class="optin">
+            <label for="register-sendemail" class="checkbox">
+              <input
+              type="checkbox"
+              id="register-sendemail"
+              class="optin"
+              name="send-email"
+              value="true">Inviatemi notizie su Spotify anche per e-mail            </label>
+          </li>
+          <li id="li-terms">
+            <label for="register-terms" class="checkbox">
+              <input
+              type="checkbox"
+              id="register-terms"
+              class="terms"
+              name="terms"
+              value="true"
+              data-msg-required="Per continuare, accetta termini e condizioni."
+              required>
+              Accetto <a class="link" href="/legal/end-user-agreement/" target="_blank">Termini e condizioni</a> e <a class="link" href="/legal/privacy-policy/" target="_blank">Informativa sulla privacy Spotify</a>.            </label>
+          </li>
+        </ul>
+      </fieldset>
+      <button id="register-button-email-submit" type="submit" class="button button-highlight js-signup-email-submit">Iscriviti</button>
+    </form>
+
+    <p class="primary">
+      Hai già un account?      <a id="register-link-login" class="js-link" data-section="login" href="/it/login/">Esegui il log in</a>
+    </p>
+  </div>
+</section>
+
+<section class="sign-up-done">
+  <div class="content">
+    <h2 class="title">Ben fatto! Goditi la musica.</h2>
+    <div class="done-check"></div>
+    <a href="spotify:" class="button button-highlight">Avvia Spotify<span></span></a>
+  </div>
+</section>
+
+
+<section class="login">
+  <div class="content">
+
+    <a href="#" class="button button-facebook js-facebook-login" id="login-button-login-fb">
+      <div class="icon-wrap">
+        <i class="icon icon-fb"></i>
+      </div>
+      <em class="text">Accedi con Facebook</em>
+    </a>
+
+    <strong class="line-thru">o</strong>
+
+    <form id="js-login-form" method="post" action="/it/xhr/json/login.php">
+      <input
+      type="hidden"
+      id="login-forward-url"
+      name="forward_url"
+      value="/it/">
+      <input type="hidden" name="referrer" value="">
+      <input type="hidden" name="utm-keywords" value="ec54bdc0356eed4d36a7cf88701ac2ce">
+      <fieldset>
+        <ul>
+          <li>
+            <label class="is-visually-hidden" for="login-username">Nome utente:</label>
+            <input
+            placeholder="Nome utente"
+            type="text"
+            id="login-username"
+            required
+            data-msg-required="Inserisci il tuo indirizzo e-mail o username Spotify."
+            name="user_name"
+            autocapitalization="off"
+            autocomplete="off"
+            autocorrect="off" />
+          </li>
+          <li>
+            <label class="is-visually-hidden" for="login-password">Password:</label>
+            <input
+            placeholder="Password"
+            type="password"
+            id="login-password"
+            required
+            data-msg-required="Inserisci la tua password."
+            name="password" />
+          </li>
+        </ul>
+      </fieldset>
+      <button id="login-button-login-submit" type="submit" class="button button-highlight">Esegui il log in</button>
+    </form>
+
+    <a id="login-link-password" href="/it/password-reset/" class="primary js-link" data-section="password-reset">Hai dimenticato la password?</a>
+
+    <p class="primary">Non hai un account?      <a id="login-link-signup-email" href="/it/signup/" class="js-link" data-section="signup-select">Iscriviti</a>
+    </p>
+  </div>
+</section>
+
+<section class="password-reset">
+  <div class="content">
+    <h2 class="title">Reimpostazione della password</h2>
+    <p class="secondary">Inserisci il tuo  <b>username Spotify</b>o <b>l'indirizzo e-mail</b> utilizzato per la registrazione. Ti invieremo un'e-mail con il tuo username e un link per reimpostare la password.</p>
+
+    <p class="msg primary"></p>
+
+    <form id="js-password-reset-form" method="post" action="/it/xhr/json/reset-password.php">
+      <fieldset>
+        <ul>
+          <li>
+            <label class="is-visually-hidden" for="password-reset">Indirizzo e-mail o username:</label>
+            <input
+            placeholder="Indirizzo e-mail o username"
+            type="text"
+            id="password-reset"
+            required
+            autocapitalize="off"
+            autocomplete="off"
+            autocorrect="off"
+            data-msg-required="Inserisci il tuo indirizzo e-mail o username Spotify."
+            name="email_or_username" />
+          </li>
+        </ul>
+      </fieldset>
+      <button id="password-button-password-submit" type="submit" class="button button-highlight">Invia</button>
+    </form>
+
+    <a id="password-link-login" href="/it/login/" class="primary back-link js-link" data-section="signup-select">&laquo; Torna indietro</a>
+    <p class="primary">
+      Se hai ancora bisogno di aiuto, contatta l'<a id="password-link-support" class="what-is-spotify" target="_blank" href="/help/overview/">assistenza Spotify.</a>    </p>
+  </div>
+</section>
+
+</div>
+</div>
+<script src="https://d2c87l0yth4zbw.cloudfront.net/js/vendors.js"></script>
+<!--[if lt IE 9]>
+    <script src="https://d2c87l0yth4zbw.cloudfront.net/js/ie-support.js"></script>
+<![endif]-->
+<script src="https://d2c87l0yth4zbw.cloudfront.net/js/parallaxScroller.js" id="spweb" data-static-url="https://d2c87l0yth4zbw.cloudfront.net"></script>
+<script src="https://d2c87l0yth4zbw.cloudfront.net/js/awe-wait-for-it-some.js" id="spweb" data-static-url="https://d2c87l0yth4zbw.cloudfront.net"></script>
+<script type="text/javascript">
+//<![CDATA[
+jQuery(function () {spweb.home.init();});
+//]]>
+</script>
+
+</body>
+</html>
